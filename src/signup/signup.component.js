@@ -1,162 +1,166 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { connect } from 'react-redux';
-import { userActions } from '../_actions';
-import { history } from '../_helpers';
+import {connect} from 'react-redux';
+import {userActions} from '../_actions';
+import {history} from '../_helpers';
 import Typography from '@material-ui/core/Typography';
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import './signup.component.css'
 
 
 const styles = theme => ({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    margin: {
-      margin: theme.spacing.unit,
-    },
-    withoutLabel: {
-      marginTop: theme.spacing.unit * 3,
-    },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200,
-    },
-    selectItem: {
-        width: '60%',
-    },
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  withoutLabel: {
+    marginTop: theme.spacing.unit * 3,
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
+  },
+  selectItem: {
+    width: '60%',
+  },
 
-    paper: {
-        padding: theme.spacing.unit * 2,
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
+  paper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
 
-    button: {
-        margin: theme.spacing.unit,
-    },
+  button: {
+    margin: theme.spacing.unit,
+  },
 
-    input: {
-        display: 'none',
-    },
-  });
+  input: {
+    display: 'none',
+  },
+});
 
-  
+
 class Signup extends Component {
 
-    constructor(props){
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-            showPassword: false,
-            message:''
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      showPassword: false,
+      message: ''
     }
-    componentWillReceiveProps(nextProps){
-        this.setState({message:nextProps.message});
-        setTimeout(() =>{
-            this.setState({
-                message:''
-            })
-        },3000)
+  }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({message: nextProps.message});
+    setTimeout(() => {
+      this.setState({
+        message: ''
+      })
+    }, 3000)
+
+  }
+
+  componentDidMount() {
+    if (localStorage.getItem('token')) {
+      history.push('/login');
     }
-    componentDidMount() {
-        console.log(this.props);
-        if(localStorage.getItem('auth')){
-            history.push('/login');
-        }
+  }
+
+  handleChange = prop => event => {
+    this.setState({[prop]: event.target.value});
+  };
+
+  signup = event => {
+    this.setState({submitted: true});
+    const {email, password} = this.state;
+    const {dispatch} = this.props;
+    if (email && password) {
+      dispatch(userActions.signup(email, password));
     }
+  }
 
-    handleChange = prop => event => {
-        this.setState({ [prop]: event.target.value });
-    };
+  render() {
+    const {classes} = this.props;
 
-    signup = event =>{
-        this.setState({ submitted: true });
-        const { username, password } = this.state;
-        const { dispatch } = this.props;
-        if (username && password) {
-            dispatch(userActions.signup(username, password));
-        }
-    }
-
-   render() {
-      const { classes } = this.props;
-
-       return (
+    return (
         <div className="login-margin">
-            <Grid container spacing={24}>
-                <Grid item xs={3}>
-                </Grid>
-                <Grid item xs={6}>
-                    <Paper className={classes.paper}>
-                        <Typography><h1>{'Signup'}</h1></Typography>
-                    </Paper>
-                    <Paper className={classes.paper}>
-                        <div>
-                        <TextField
-                            label="Username"
-                            value={this.state.username}
-                            className={classes.textField}
-                            onChange = {this.handleChange('username')}
-                            />
-                        <br/>
-                        <br/>
-                        <TextField
-                            label="Password"
-                            autoComplete="current-password"
-                            type={this.state.showPassword ? 'text' : 'password'}
-                            className={classes.textField}
-                            value={this.state.password}
-                            onChange={this.handleChange('password')}
-                        />
-                        <br/>
-                        <br/>
-                            <Button variant="contained" color="primary" className={classes.button} onClick={() => { history.push('/login') }} >
-                                Login
-                            </Button>
-                            <Button variant="contained" color="primary" className={classes.button} onClick={(event)=>{this.signup()}}>
-                            Signup
-                        </Button>
-                        </div>
-                    </Paper>
-                    {this.state.message}
-                </Grid>
-                <Grid item xs={3}>
-                </Grid>
+          <Grid container spacing={24}>
+            <Grid item xs={3}>
             </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="display1">{'Signup'}</Typography>
+              </Paper>
+              <Paper className={classes.paper}>
+                <div>
+                  <TextField
+                      label="Email"
+                      value={this.state.email}
+                      className={classes.textField}
+                      onChange={this.handleChange('email')}
+                  />
+                  <br/>
+                  <br/>
+                  <TextField
+                      label="Password"
+                      autoComplete="current-password"
+                      type={this.state.showPassword ? 'text' : 'password'}
+                      className={classes.textField}
+                      value={this.state.password}
+                      onChange={this.handleChange('password')}
+                  />
+                  <br/>
+                  <br/>
+                  <Button variant="contained" color="primary" className={classes.button} onClick={() => {
+                    history.push('/login')
+                  }}>
+                    Login
+                  </Button>
+                  <Button variant="contained" color="primary" className={classes.button} onClick={(event) => {
+                    this.signup()
+                  }}>
+                    Signup
+                  </Button>
+                </div>
+              </Paper>
+              {this.state.message}
+            </Grid>
+            <Grid item xs={3}>
+            </Grid>
+          </Grid>
         </div>
-      );
-   }
+    );
+  }
 }
 
 Signup.propTypes = {
-    classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => {
+  const {loggingIn, message} = state.authentication;
+  return {
+    loggingIn, message
   };
-  
-const mapStateToProps = (state) =>{
-    console.log(state);
-    const { loggingIn,message } = state.authentication;
-    return {
-        loggingIn,message
-    };
 }
 
 const connectedSignupPage = withRouter(connect(mapStateToProps, null, null, {
-    pure: false
+  pure: false
 })(withStyles(styles)(Signup)));
 
-export { connectedSignupPage as Signup };
+export {connectedSignupPage as Signup};

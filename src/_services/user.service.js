@@ -33,6 +33,5 @@ function getOptions(download){
         options.headers = { 'x-access-token': localStorage.getItem('token') };
     }
     options.responseType=download?'blob':download;
-    console.log(options)
     return options;
 }
