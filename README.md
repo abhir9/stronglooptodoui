@@ -12,6 +12,8 @@ You need to have installed [ReactJS](https://reactjs.org/) with [npm](https://ww
 ### To run the server:
 
 ```
+$ npm install
+
 $ npm start
 
 server starts at PORT=3000
