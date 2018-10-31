@@ -35,12 +35,22 @@ API Repository
 https://github.com/abhir9/todoapi
 ```
 
-- `POST /appuser/login` -> login user.
-- `POST /appuser/logout` -> logout user.
-- `GET /todos` -> get todos list.
-- `POST /todos` -> create new todo.
-- `PUT /todos` -> update todo.
+- `POST api/appuser/login` -> login user.
+- `POST api/appuser/logout` -> logout user.
+- `GET api/todos` -> get todos list.
+- `POST api/todos` -> create new todo.
+- `PUT api/todos` -> update todo.
 ---
+## Modules Used
+- **Material UI**
+    - @material-ui
+- **React starter kit**
+    - react-scripts
+- **Download pdf**
+    - jspdf
+- **Api Call**
+    - axios
+
 
 ## Built with:
 
