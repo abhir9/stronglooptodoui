@@ -7,6 +7,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -17,49 +18,72 @@ import IconButton from '@material-ui/core/IconButton';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import {withRouter} from 'react-router-dom';
 
+const jsPDF = require('jspdf');
 const drawerWidth = 240;
 
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  appFrame: {
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-    width: '100%',
-  },
-  appBar: {
-    width: `calc(100% - ${drawerWidth}px)`,
-  },
-  'appBar-left': {
-    marginLeft: drawerWidth,
-  },
-  'appBar-right': {
-    marginRight: drawerWidth,
-  },
-  drawerPaper: {
-    position: 'relative',
-    width: drawerWidth,
-  },
-  toolbar: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
-  },
+      root: {
+        flexGrow: 1,
+      },
 
-  paper: {
-    position: 'absolute',
-    width: theme.spacing.unit * 50,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-  },
-});
+      appFrame: {
+        zIndex: 1,
+        overflow:
+            'hidden',
+        position:
+            'relative',
+        display:
+            'flex',
+        width:
+            '100%',
+      }
+      ,
+      appBar: {
+        width: `calc(100% - ${drawerWidth}px)`,
+      }
+      ,
+      'appBar-left':
+          {
+            marginLeft: drawerWidth,
+          }
+      ,
+      'appBar-right':
+          {
+            marginRight: drawerWidth,
+          }
+      ,
+      drawerPaper: {
+        position: 'relative',
+        width:
+        drawerWidth,
+      }
+      ,
+      toolbar: theme.mixins.toolbar,
+      content:
+          {
+            flexGrow: 1,
+            backgroundColor:
+            theme.palette.background.default,
+            padding:
+            theme.spacing.unit * 3,
+          }
+      ,
 
+      paper: {
+        position: 'absolute',
+        width:
+        theme.spacing.unit * 50,
+        backgroundColor:
+        theme.palette.background.paper,
+        boxShadow:
+            theme.shadows[5],
+        padding:
+        theme.spacing.unit * 4,
+      }
+      ,
+    })
+;
 
 class Todo extends Component {
   constructor(props) {
@@ -83,6 +107,11 @@ class Todo extends Component {
     const {dispatch} = this.props;
     dispatch(todoAction.downloadTodoById(id))
   };
+  exportToPdf = (event) => {
+    let doc = new jsPDF();
+    doc.fromHTML(document.getElementById('tododata'));
+    doc.save("AllTodo.pdf");
+  }
 
   handleClick = (event, id) => {
     const {dispatch} = this.props;
@@ -105,7 +134,10 @@ class Todo extends Component {
                 </Grid>
               </Grid>
               <Grid container spacing={24}>
-                <Grid item xs={3}>
+                <Grid item xs={3} container justify="flex-start">
+                  <Button onClick={(event) => this.exportToPdf(event)} variant="contained" color="primary" className={classes.button}>
+                    Export ToDo
+                  </Button>
                 </Grid>
                 <Grid item xs={6}>
                 </Grid>
@@ -118,18 +150,26 @@ class Todo extends Component {
               <br/>
               <br/>
               <Grid container spacing={24}>
-                <Paper className={classes.root}>
-                  <Table className={classes.table}>
-                    <TableBody style={{fontSize: 30}}>
+                <Paper id="tododata" className={classes.root}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell numeric>Name</TableCell>
+                        <TableCell numeric>Priority</TableCell>
+                        <TableCell numeric>Attachment</TableCell>
+                        <TableCell>Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
                       {todo.map(n => {
                         return (
                             <TableRow key={n.id}>
-                              <TableCell style={{fontSize: 20}} component="th" scope="row">
+                              <TableCell numeric component="th" scope="row">
                                 {n.name}
                               </TableCell>
-                              <TableCell style={{fontSize: 20}} numeric>{n.priority}</TableCell>
-                              <TableCell style={{fontSize: 20}} numeric>{n.fileName}</TableCell>
-                              <TableCell style={{fontSize: 20}}>
+                              <TableCell numeric>{n.priority}</TableCell>
+                              <TableCell numeric>{n.fileName}</TableCell>
+                              <TableCell>
                                 <IconButton className={classes.button} aria-label="Delete" onClick={(event) => this.handleDownload(event, n.id)}>
                                   <SvgIcon>
                                     <path d="M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z"/>

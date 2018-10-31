@@ -12,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import {withRouter} from 'react-router-dom';
 import './login.component.css'
 
-
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -34,11 +33,6 @@ const styles = theme => ({
     width: 200,
   },
 
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
 
   button: {
     margin: theme.spacing.unit,
@@ -99,10 +93,10 @@ class Login extends Component {
             <Grid item xs={3}>
             </Grid>
             <Grid item xs={6}>
-              <Paper className={classes.paper}>
+              <Paper>
                 <Typography variant="display1">{'Login'}</Typography>
               </Paper>
-              <Paper className={classes.paper}>
+              <Paper>
                 <div>
                   <TextField
                       label="Email"

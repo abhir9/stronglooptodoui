@@ -10,6 +10,7 @@
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "history": "^4.7.2",
+    "jspdf": "^1.4.1",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
