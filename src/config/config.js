@@ -1,3 +1,3 @@
 module.exports = {
-    baseUrl: 'http://localhost:3000/api'
+    baseUrl: 'https://my--todo.herokuapp.com/api'
 }

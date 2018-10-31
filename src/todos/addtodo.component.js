@@ -12,6 +12,7 @@ import {todoAction} from '../_actions';
 import {withRouter} from 'react-router-dom';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const drawerWidth = 240;
 
@@ -58,21 +59,36 @@ const styles = theme => ({
 class AddTodo extends Component {
   constructor(props) {
     super(props);
-    this.state = {file: null, loaded: 0};
+    this.state = {file: null, loaded: 0,message:null,showMessage:false};
   }
-
+updateNotification =(msg)=>{
+    this.setState({
+        message:msg,
+        showMessage:true
+    })
+    setTimeout(()=>{
+        this.setState({
+            message:'',
+            showMessage:false
+        })
+    },2000)
+}
   handleChange = prop => event => {
     const {dispatch} = this.props;
-
     dispatch(todoAction.onChangeProps(prop, event));
   };
   handleChangeFile = prop => event => {
     event.preventDefault();
-    this.setState({
-      file: event.target.files[0],
-      fileName: event.target.files[0].name,
-      loaded: 1
-    })
+    let FileSize = event.target.files[0].size / 1024/1024 ; // in MB
+      if (FileSize > 0.512) {
+          this.updateNotification('File size should not exceeds 512 kb')
+      } else {
+          this.setState({
+              file: event.target.files[0],
+              fileName: event.target.files[0].name,
+              loaded: 1          })
+          this.updateNotification('File Uploaded')
+      }
   };
 
   componentDidMount() {
@@ -101,6 +117,9 @@ class AddTodo extends Component {
         dispatch(todoAction.createTodo(payload));
       }
     }
+    else {
+        this.updateNotification('Please check Input Fields')
+    }
   }
 
 
@@ -115,7 +134,6 @@ class AddTodo extends Component {
       return <Typography>{'Edit Todo'}</Typography>;
     }
 
-
     function SegHeader() {
       if (params.id) {
         return <EditText/>;
@@ -123,8 +141,8 @@ class AddTodo extends Component {
       return <InsertText/>;
     }
 
-    return (
 
+    return (
         <div className={classes.root}>
           <div className={classes.appFrame}>
             <AppBar/>
@@ -135,6 +153,14 @@ class AddTodo extends Component {
                   <SegHeader/>
                 </Grid>
                 <Grid item xs={6}>
+                  <Snackbar
+                      anchorOrigin={{ vertical:"top", horizontal:"right" }}
+                      open={this.state.showMessage}
+                      ContentProps={{
+                          'aria-describedby': 'message-id',
+                      }}
+                      message={<span id="message-id">{this.state.message}</span>}
+                  />
                 </Grid>
                 <Grid item xs={3} container justify="flex-end">
                 </Grid>
@@ -175,12 +201,13 @@ class AddTodo extends Component {
                                 id="contained-button-file"
                                 multiple
                                 type="file"
-                                style={{visibility: 'hidden'}}
+                                style={{display: 'none'}}
                                 onChange={this.handleChangeFile('file')}
                             />
+
                             <label htmlFor="contained-button-file">
                               <Button style={{marginTop: 30}} variant="contained" component="span" className={classes.button}>
-                                Upload Attachment
+                                  {this.state.loaded===1?this.state.fileName:'Upload Attachment'}
                               </Button>
                             </label>
                           </Grid>
