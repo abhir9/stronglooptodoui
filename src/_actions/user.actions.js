@@ -73,7 +73,7 @@ export function loginFailure(user) {
   return {
     type: "LOGIN_FAILURE",
     token: null,
-    message: user.message
+    message: user.message.indexOf('Request failed with status code 4') > -1 ? 'Login Failed, Please Try Again' : user.message
   }
 }
 

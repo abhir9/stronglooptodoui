@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import {userActions} from '../_actions';
 import {history} from '../_helpers';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
 import {withRouter} from 'react-router-dom';
 import './signup.component.css'
 
@@ -61,18 +62,14 @@ class Signup extends Component {
       email: '',
       password: '',
       showPassword: false,
-      message: ''
+      message: '',
+        showMessage:false
     }
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({message: nextProps.message});
-    setTimeout(() => {
-      this.setState({
-        message: ''
-      })
-    }, 3000)
-
+      this.updateNotification(nextProps.message)
   }
 
   componentDidMount() {
@@ -80,7 +77,18 @@ class Signup extends Component {
       history.push('/login');
     }
   }
-
+    updateNotification =(msg)=>{
+        this.setState({
+            message:msg,
+            showMessage:msg?true:false
+        })
+        setTimeout(()=>{
+            this.setState({
+                message:'',
+                showMessage:false
+            })
+        },2000)
+    }
   handleChange = prop => event => {
     this.setState({[prop]: event.target.value});
   };
@@ -101,6 +109,14 @@ class Signup extends Component {
         <div className="login-margin">
           <Grid container spacing={24}>
             <Grid item xs={3}>
+              <Snackbar
+                  anchorOrigin={{ vertical:"top", horizontal:"right" }}
+                  open={this.state.showMessage}
+                  ContentProps={{
+                      'aria-describedby': 'message-id',
+                  }}
+                  message={<span id="message-id">{this.state.message}</span>}
+              />
             </Grid>
             <Grid item xs={6}>
               <Paper className={classes.paper}>
@@ -138,7 +154,6 @@ class Signup extends Component {
                   </Button>
                 </div>
               </Paper>
-              {this.state.message}
             </Grid>
             <Grid item xs={3}>
             </Grid>

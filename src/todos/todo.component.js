@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
+import TableCell  from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
@@ -20,13 +20,32 @@ import {withRouter} from 'react-router-dom';
 
 const jsPDF = require('jspdf');
 const drawerWidth = 240;
-
+const CustomTableCell  = withStyles(theme => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+        fontSize: 17,
+    },
+    body: {
+        fontSize: 15,
+    },
+}))(TableCell );
 
 const styles = theme => ({
       root: {
         flexGrow: 1,
+          width: '100%',
+          marginTop: theme.spacing.unit * 3,
+          overflowX: 'auto',
       },
-
+    table: {
+        minWidth: 700,
+    },
+    row: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default,
+        },
+    },
       appFrame: {
         zIndex: 1,
         overflow:
@@ -131,7 +150,6 @@ class Todo extends Component {
                 <Grid item xs={9}>
                 </Grid>
                 <Grid item xs={3} container justify="flex-end">
-
                 </Grid>
               </Grid>
               <Grid container spacing={24}>
@@ -154,23 +172,24 @@ class Todo extends Component {
                 <Paper id="tododata" className={classes.root}>
                   <Table>
                     <TableHead>
-                      <TableRow>
-                        <TableCell numeric>Name</TableCell>
-                        <TableCell numeric>Priority</TableCell>
-                        <TableCell numeric>Attachment</TableCell>
-                        <TableCell>Action</TableCell>
+                      <TableRow >
+
+                        <CustomTableCell  numeric>Name</CustomTableCell >
+                        <CustomTableCell  numeric>Priority</CustomTableCell >
+                        <CustomTableCell  numeric>Attachment</CustomTableCell >
+                        <CustomTableCell >Action</CustomTableCell >
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {todo.map(n => {
                         return (
                             <TableRow key={n.id}>
-                              <TableCell numeric component="th" scope="row">
+                              <CustomTableCell   padding="dense" numeric component="th" scope="row">
                                 {n.name}
-                              </TableCell>
-                              <TableCell numeric>{n.priority}</TableCell>
-                              <TableCell numeric>{n.fileName}</TableCell>
-                              <TableCell>
+                              </CustomTableCell >
+                              <CustomTableCell  numeric>{n.priority}</CustomTableCell >
+                              <CustomTableCell  numeric>{n.fileName}</CustomTableCell >
+                              <CustomTableCell >
                                 <IconButton className={classes.button} aria-label="Delete" onClick={(event) => this.handleDownload(event, n.id)}>
                                   <SvgIcon>
                                     <path d="M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z"/>
@@ -183,7 +202,7 @@ class Todo extends Component {
                                 <IconButton className={classes.button} aria-label="Delete" onClick={(event) => this.handleClick(event, n.id)}>
                                   <DeleteIcon/>
                                 </IconButton>
-                              </TableCell>
+                              </CustomTableCell >
                             </TableRow>
                         );
                       })}
